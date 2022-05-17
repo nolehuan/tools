@@ -5,10 +5,13 @@ from tqdm import tqdm
 
 # hightest_points = {"frame": "*.jpg", "points": [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]}
 
-png_files = '../dataset/FCLane/group2/*/label.png'
-min_y = 280
+# png_files = '../dataset/FCLane/group2/*/label.png'
+# min_y = 280
+png_files = '../LoFTR/assets/odometry/09/json/*/label.png'
+min_y = 370
 
-with tqdm(total = 76) as pbar:
+# with tqdm(total = 76) as pbar:
+with tqdm(total = 416) as pbar:
     for pngfile in glob.glob(png_files):
         hightest_points = {"frame": "*.jpg", "points": [[],[],[],[]]}
         png_name = pngfile.split('\\')[-2][:-5]
@@ -44,7 +47,8 @@ with tqdm(total = 76) as pbar:
                 png[np.where(png == maxVal)] = 0
                 _, maxVal, _, maxLoc = cv2.minMaxLoc(png)
         
-        with open("../dataset/FCLane/hightest_points.json", 'a', encoding='utf-8') as f:
+        # with open("../dataset/FCLane/hightest_points.json", 'a', encoding='utf-8') as f:
+        with open("../LoFTR/assets/odometry/09/hightest_points.json", 'a', encoding='utf-8') as f:
             json.dump(hightest_points, f)
             f.write("\n")
             f.close()

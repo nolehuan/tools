@@ -24,7 +24,7 @@ from gps2xyz import gps_to_ecef, ecef_to_enu
 # f.close()
 
 def readVIO(poses):
-    traj_file = './KeyFrameTrajectory09.txt'
+    traj_file = '../tools/files/KeyFrameTrajectory09.txt'
     with open(traj_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
@@ -39,19 +39,18 @@ def readVIO(poses):
 
 def readGNSS(x_path, y_path, z_path, odometry):
     # file_path = '../dataset/KITTI/raw/residential/2011_09_30_drive_0033/2011_09_30/2011_09_30_drive_0033_sync/oxts/data/*'
-    file_path = './data/*'
+    file_path = '../tools/files/data/*'
     gps_files = sorted(glob.glob(file_path))
-    gps_ref = np.loadtxt(gps_files[0])
+    gps_ref = np.loadtxt(gps_files[149])
     gps_ref_lla = gps_ref[0:3]
 
     # for i in range(0, len(gps_files)):
-    for i in range(15, 1155):
+    for i in range(149, 648):
         gps_cur = np.loadtxt(gps_files[i])
-        gps_cur_lla = gps_cur[0:3]
         x, y, z = gps_to_ecef(gps_cur[0], gps_cur[1], gps_cur[2])
         x_enu, y_enu, z_enu = ecef_to_enu(x, y, z, gps_ref_lla[0], gps_ref_lla[1], gps_ref_lla[2])
 
-        if i > 15:
+        if i > 149:
             odometry.append(odometry[-1] + math.sqrt((x_enu - x_path[-1])**2 + (y_enu - y_path[-1])**2 + (z_enu - z_path[-1])**2))
 
         x_path.append(x_enu)
@@ -64,16 +63,7 @@ if __name__ == '__main__':
     y_path = []
     z_path = []
     odometry = [0]
-
     readGNSS(x_path, y_path, z_path, odometry)
-    poses = []
-    readVIO(poses)
-    poses = np.array(poses)
-    poses = np.multiply(poses, 21.9887)
-    x_vio = poses[:,0]
-    y_vio = poses[:,1]
-    z_vio = poses[:,2]
-
 
     fig = plt.figure('path')
     ax = fig.add_subplot(211, projection='3d')

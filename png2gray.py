@@ -4,6 +4,7 @@ import glob
 import cv2
 import numpy as np
 
+'''
 path = '../ICPS_RoadSurfaceClassification_202201v3/svm.png'
 png = cv2.imread(path, -1)
 # png = cv2.resize(png, (500, 440))
@@ -12,7 +13,7 @@ cv2.imshow(".", png)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 cv2.imwrite(path, png)
-
+'''
 
 png_file = '../LoFTR/assets/kitti/label/0000000000.png'
 png = cv2.imread(png_file, 0)

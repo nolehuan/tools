@@ -3,6 +3,14 @@
 import cv2
 import numpy as np
 
+'''
+image = cv2.imread("../LoFTR/assets/odometry/09/label/000016.png", -1)
+image[np.where(image == 2)] = 255
+cv2.imshow("demo", image)
+cv2.waitKey(0)
+'''
+
+
 # img = cv2.imread(r"../dataset/culane/laneseg_label_w16/driver_23_30frame/05151640_0419.MP4/00000.png", 0)
 # # img = cv2.imread(r"../FCLane/laneseg_label/group1/010000.png")
 # # img = cv2.imread(r"../FCLane/group1/010000_json/label.png")

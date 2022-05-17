@@ -2,13 +2,15 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 import matplotlib.pyplot as plt
 import math
+import glob
 import pandas as pd
+from gps2xyz import gps_to_ecef, ecef_to_enu
 
-sim3 = np.load('./kitti_09_ape/alignment_transformation_sim3.npy')
+sim3 = np.load('../tools/files/kitti_09_ape/alignment_transformation_sim3.npy')
 
 
 def readVIO(pos):
-    traj_file = './KeyFrameTrajectory09.txt'
+    traj_file = '../tools/files/KeyFrameTrajectory09.txt'
     with open(traj_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
@@ -34,84 +36,63 @@ def readVIO(pos):
                 pos.append(Tsim3[:3, 3])
     f.close()
 
-# pos = []
-# readVIO(pos)
-# pos = np.array(pos)
+def readGNSS(x_path, y_path, z_path, odometry):
+    # file_path = '../dataset/KITTI/raw/residential/2011_09_30_drive_0033/2011_09_30/2011_09_30_drive_0033_sync/oxts/data/*'
+    file_path = '../tools/files/data/*'
+    gps_files = sorted(glob.glob(file_path))
+    gps_ref = np.loadtxt(gps_files[149])
+    gps_ref_lla = gps_ref[0:3]
+
+    # for i in range(0, len(gps_files)):
+    for i in range(149, 648):
+        gps_cur = np.loadtxt(gps_files[i])
+        x, y, z = gps_to_ecef(gps_cur[0], gps_cur[1], gps_cur[2])
+        x_enu, y_enu, z_enu = ecef_to_enu(x, y, z, gps_ref_lla[0], gps_ref_lla[1], gps_ref_lla[2])
+
+        if i > 149:
+            odometry.append(odometry[-1] + math.sqrt((x_enu - x_path[-1])**2 + (y_enu - y_path[-1])**2 + (z_enu - z_path[-1])**2))
+
+        x_path.append(x_enu)
+        y_path.append(y_enu)
+        z_path.append(z_enu)
 
 
-# df = pd.DataFrame(pos)
-# df.rename(columns = {0: "x", 1: "y", 2: "z"}, inplace = True)
-# writer = pd.ExcelWriter("./vo.xlsx")
-# df.to_excel(writer)
-# writer.save()
-# # df.to_csv("./kitti_path09.csv")
+if __name__ == '__main__':
+    x_path = []
+    y_path = []
+    z_path = []
+    odometry = [0]
+    readGNSS(x_path, y_path, z_path, odometry)
+    print(x_path[-1] - x_path[0])
+    print(y_path[-1] - y_path[0])
+    print(z_path[-1] - z_path[0])
 
-# odom = [0]
-# for i in range (1, pos.shape[0], 1):
-#     odom.append(odom[-1] + math.sqrt((pos[i, 0] - pos[i-1, 0])**2 + (pos[i, 1] - pos[i-1, 1])**2 + (pos[i, 2] - pos[i-1, 2])**2))
+    pos = []
+    readVIO(pos)
+    pos = np.array(pos)
+    x_vio = pos[:, 0]
+    y_vio = pos[:, 1]
+    z_vio = pos[:, 2]
+    print(x_vio[-1] - x_vio[0])
+    print(y_vio[-1] - y_vio[0])
+    print(z_vio[-1] - z_vio[0])
 
-def readgt(pos):
-    traj_file = './kitti_09_gt_vio.txt'
-    with open(traj_file, 'r') as f:
-        for line in f.readlines():
-            line = line.strip()
-            pose = line.split(' ')
-            if len(pose) == 8:
-                tx = float(pose[1])
-                ty = float(pose[2])
-                tz = float(pose[3])
-                t = np.array([tx, ty, tz])
+    vio_odom = [0]
+    for i in range (1, pos.shape[0]):
+        vio_odom.append(vio_odom[-1] + math.sqrt((x_vio[i] - x_vio[i-1])**2 + (y_vio[i] - y_vio[i-1])**2 + (z_vio[i] - z_vio[i-1])**2))
 
-                pos.append(t)
-    f.close()
+    fig = plt.figure('path')
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot(x_path, y_path, z_path, label='gnss', c='g')
+    ax.plot(x_vio, -z_vio, -y_vio, label='vio', c='b')
+    ax.set_xlabel('E')
+    ax.set_ylabel('N')
+    ax.set_zlabel('U')
 
+    # ax.set_xlim(-200, 200)
+    # ax.set_ylim(-40, 40)
+    # ax.set_zlim(0, 600)
+    ax.legend()
+    plt.show()
 
-pos_gt = []
-odometry = [0]
-readgt(pos_gt)
-pos_gt = np.array(pos_gt)
-pos_gt = pos_gt - pos_gt[0]
-pos_gt[:, 1] = -pos_gt[:, 1]
-
-df = pd.DataFrame(pos_gt)
-df.rename(columns = {0: "x", 1: "y", 2: "z"}, inplace = True)
-writer = pd.ExcelWriter("./gnss.xlsx")
-df.to_excel(writer)
-writer.save()
-# df.to_csv("./kitti_path09.csv")
-
-for i in range (1, pos_gt.shape[0], 1):
-    odometry.append(odometry[-1] + math.sqrt((pos_gt[i, 0] - pos_gt[i-1, 0])**2 + (pos_gt[i, 1] - pos_gt[i-1, 1])**2 + (pos_gt[i, 2] - pos_gt[i-1, 2])**2))
-
-
-# from kitti_path_player import readGNSS
-# x_path = []
-# y_path = []
-# z_path = []
-# odometry = [0]
-
-# readGNSS(x_path, y_path, z_path, odometry)
-
-
-# fig = plt.figure('path')
-# ax = fig.add_subplot(111, projection='3d')
-# ax.plot(pos[:, 0], pos[:, 1], pos[:, 2], label='vo path', c='g')
-# ax.plot(pos_gt[:, 0], pos_gt[:, 1], pos_gt[:, 2], label='gnss path', c='r')
-# ax.set_xlabel('X')
-# ax.set_ylabel('Y')
-# ax.set_zlabel('Z')
-# ax.set_xlim(-200, 200)
-# ax.set_ylim(-40, 40)
-# ax.set_zlim(0, 600)
-# ax.legend()
-# plt.show()
-
-fig = plt.figure('odom')
-ax = fig.add_subplot(111)
-# ax.plot(odom, -pos[:, 1], label='vo odom', c='g')
-ax.plot(odometry, -pos_gt[:, 1], label='gnss odom', c='r')
-ax.set_xlim(-10, 600)
-ax.set_ylim(0, 40)
-ax.legend()
-plt.show()
 
