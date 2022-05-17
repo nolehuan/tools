@@ -6,11 +6,11 @@ import glob
 import pandas as pd
 from gps2xyz import gps_to_ecef, ecef_to_enu
 
-sim3 = np.load('../tools/files/kitti_09_ape/alignment_transformation_sim3.npy')
+sim3 = np.load('../tools/files/kitti_09_ape_part/alignment_transformation_sim3.npy')
 
 
 def readVIO(pos):
-    traj_file = '../tools/files/KeyFrameTrajectory09.txt'
+    traj_file = '../tools/files/KeyFrameTrajectory09_part.txt'
     with open(traj_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
