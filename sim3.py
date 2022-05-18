@@ -2,15 +2,24 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 import matplotlib.pyplot as plt
 import math
-import glob
-import pandas as pd
-from gps2xyz import gps_to_ecef, ecef_to_enu
+# sim3 = np.load('./files/kitti_09_ape_part/alignment_transformation_sim3.npy')
+sim3 = np.array([[4.11801, 0.52509, 10.6321, -182.676],
+                [-1.6277, -11.2366, 1.18151, -12.4243],
+                [10.5214, -1.93319, -3.97967, 83.7326],
+                [      0,        0,       0,        1]])
 
-sim3 = np.load('../tools/files/kitti_09_ape_part/alignment_transformation_sim3.npy')
-
+def read_vio(points):
+    pts_file = './files/points.txt'
+    with open(pts_file, 'r') as f:
+        for line in f.readlines():
+            line = line.strip()
+            xyz = line.split(' ')
+            if len(xyz) == 3:
+                points.append([float(xyz[0]), float(xyz[1]), float(xyz[2])])
+    f.close()
 
 def readVIO(pos):
-    traj_file = '../tools/files/KeyFrameTrajectory09_part.txt'
+    traj_file = './files/KeyFrameTrajectory09_part.txt'
     with open(traj_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
@@ -20,41 +29,68 @@ def readVIO(pos):
                 ty = float(pose[3])
                 tz = float(pose[4])
                 t = np.array([tx, ty, tz]).reshape([3, 1])
-                q1 = float(pose[5])
-                q2 = float(pose[6])
-                q3 = float(pose[7])
-                q4 = float(pose[8])
-                q = [q1, q2, q3, q4]
+
+                #'''
+                R = sim3[:3, :3].reshape([3, 3])
+                dt = sim3[:3, 3].reshape([3, 1])
+                t = np.dot(R, t) + dt
+                # s = np.linalg.det(R) ** (1/3)
+                # t = s * np.dot(R / s, t) + dt
+                pos.append(np.array(t))
+                #'''
+                '''
+                qx = float(pose[5])
+                qy = float(pose[6])
+                qz = float(pose[7])
+                qw = float(pose[8])
+                q = [qx, qy, qz, qw]
+                # print(qx ** 2 + qy ** 2 + qz ** 2 + qw ** 2)
                 R = Rotation.from_quat(q)
                 R = R.as_matrix()
+                # q_ = Rotation.from_matrix(R)
+                # q_ = q_.as_quat()
+                # print(np.transpose(R))
                 # print(np.dot(np.transpose(R), R))
                 Rt = np.hstack([R, t])
                 a = np.array([0, 0, 0, 1])
                 T = np.vstack([Rt, a])
                 Tsim3 = np.dot(sim3, T)
-
                 pos.append(Tsim3[:3, 3])
+                '''
+                ''' incorrect
+                qx = float(pose[5])
+                qy = float(pose[6])
+                qz = float(pose[7])
+                qw = float(pose[8])
+                q = [qx, qy, qz, qw]
+                R = Rotation.from_quat(q)
+                R = R.as_matrix()
+                t = - np.dot(np.transpose(R), t)
+
+                sR = sim3[:3, :3].reshape([3, 3])
+                dt = sim3[:3, 3].reshape([3, 1])
+                t = np.dot(sR, t) + dt
+                pos.append(np.array(t))
+                '''
+
     f.close()
 
-def readGNSS(x_path, y_path, z_path, odometry):
-    # file_path = '../dataset/KITTI/raw/residential/2011_09_30_drive_0033/2011_09_30/2011_09_30_drive_0033_sync/oxts/data/*'
-    file_path = '../tools/files/data/*'
-    gps_files = sorted(glob.glob(file_path))
-    gps_ref = np.loadtxt(gps_files[149])
-    gps_ref_lla = gps_ref[0:3]
-
-    # for i in range(0, len(gps_files)):
-    for i in range(149, 648):
-        gps_cur = np.loadtxt(gps_files[i])
-        x, y, z = gps_to_ecef(gps_cur[0], gps_cur[1], gps_cur[2])
-        x_enu, y_enu, z_enu = ecef_to_enu(x, y, z, gps_ref_lla[0], gps_ref_lla[1], gps_ref_lla[2])
-
-        if i > 149:
-            odometry.append(odometry[-1] + math.sqrt((x_enu - x_path[-1])**2 + (y_enu - y_path[-1])**2 + (z_enu - z_path[-1])**2))
-
-        x_path.append(x_enu)
-        y_path.append(y_enu)
-        z_path.append(z_enu)
+def read_gt(x_path, y_path, z_path, odometry):
+    file_path = './files/kitti_09_gt_part.txt'
+    with open(file_path, 'r') as f:
+        for line in f.readlines():
+            line = line.strip()
+            pose = line.split(' ')
+            if len(pose) == 8:
+                tx = float(pose[1])
+                ty = float(pose[2])
+                tz = float(pose[3])
+                x_path.append(tx)
+                y_path.append(ty)
+                z_path.append(tz)
+                if len(x_path) > 1:
+                    odometry.append(odometry[-1] + math.sqrt((tx - x_path[-2])**2 + (ty - y_path[-2])**2 + (tz - z_path[-2])**2))
+    f.close()
 
 
 if __name__ == '__main__':
@@ -62,37 +98,55 @@ if __name__ == '__main__':
     y_path = []
     z_path = []
     odometry = [0]
-    readGNSS(x_path, y_path, z_path, odometry)
-    print(x_path[-1] - x_path[0])
-    print(y_path[-1] - y_path[0])
-    print(z_path[-1] - z_path[0])
+    read_gt(x_path, y_path, z_path, odometry)
 
     pos = []
     readVIO(pos)
-    pos = np.array(pos)
-    x_vio = pos[:, 0]
-    y_vio = pos[:, 1]
-    z_vio = pos[:, 2]
-    print(x_vio[-1] - x_vio[0])
-    print(y_vio[-1] - y_vio[0])
-    print(z_vio[-1] - z_vio[0])
+    pos = np.array(pos).reshape([len(pos), 3])
+    xVIO = pos[:, 0]
+    yVIO = pos[:, 1]
+    zVIO = pos[:, 2]
+    xVIO = xVIO.tolist()
+    yVIO = yVIO.tolist()
+    zVIO = zVIO.tolist()
 
-    vio_odom = [0]
+    VIO_odom = [0]
     for i in range (1, pos.shape[0]):
-        vio_odom.append(vio_odom[-1] + math.sqrt((x_vio[i] - x_vio[i-1])**2 + (y_vio[i] - y_vio[i-1])**2 + (z_vio[i] - z_vio[i-1])**2))
+        VIO_odom.append(VIO_odom[-1] + math.sqrt((xVIO[i] - xVIO[i-1])**2 + (yVIO[i] - yVIO[i-1])**2 + (zVIO[i] - zVIO[i-1])**2))
 
-    fig = plt.figure('path')
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot(x_path, y_path, z_path, label='gnss', c='g')
-    ax.plot(x_vio, -z_vio, -y_vio, label='vio', c='b')
+    # points = []
+    # read_vio(points)
+    # points = np.array(points)
+    # x_vio = points[:, 0]
+    # y_vio = points[:, 1]
+    # z_vio = points[:, 2]
+    # x_vio = x_vio.tolist()
+    # y_vio = y_vio.tolist()
+    # z_vio = z_vio.tolist()
+
+    # fig = plt.figure('path')
+    # ax = fig.add_subplot(111, projection='3d')
+    # ax.plot(x_path, y_path, z_path, label='gnss', c='g')
+    # ax.plot(x_vio, y_vio, z_vio, label='vio', c='b')
+    # ax.set_xlabel('E')
+    # ax.set_ylabel('N')
+    # ax.set_zlabel('U')
+
+    # # ax.set_xlim(-200, 200)
+    # # ax.set_ylim(-40, 40)
+    # # ax.set_zlim(0, 600)
+    # ax.legend()
+    # plt.show()
+
+    fig = plt.figure()
+    ax = plt.gca(projection = '3d')
+    ax.plot3D(x_path, y_path, z_path, 'b.')
+    # ax.plot3D(x_vio, y_vio, z_vio, 'g*')
+    ax.plot3D(xVIO, yVIO, zVIO, 'y.')
     ax.set_xlabel('E')
-    ax.set_ylabel('N')
-    ax.set_zlabel('U')
-
-    # ax.set_xlim(-200, 200)
-    # ax.set_ylim(-40, 40)
-    # ax.set_zlim(0, 600)
-    ax.legend()
+    ax.set_ylabel('U')
+    ax.set_zlabel('N')
+    ax.set_xlim3d(-150, 100)
+    ax.set_ylim3d(-150, 100)
+    ax.set_zlim3d(200, 450)
     plt.show()
-
-
