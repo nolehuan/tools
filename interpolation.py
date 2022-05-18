@@ -14,7 +14,7 @@ def interpolation():
             pose[0] = str(round(start + (end - start) * count / total, 6))
             for i in range(8):
                 outfile.write(pose[i])
-                outfile.write(' ')
+                if i != 7: outfile.write(' ')
             outfile.write('\n')
             count += 1
             

@@ -2,11 +2,11 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 import matplotlib.pyplot as plt
 import math
-# sim3 = np.load('./files/kitti_09_ape_part/alignment_transformation_sim3.npy')
-sim3 = np.array([[4.11801, 0.52509, 10.6321, -182.676],
-                [-1.6277, -11.2366, 1.18151, -12.4243],
-                [10.5214, -1.93319, -3.97967, 83.7326],
-                [      0,        0,       0,        1]])
+sim3 = np.load('./files/kitti_09_ape/alignment_transformation_sim3.npy')
+# sim3 = np.array([[4.11801, 0.52509, 10.6321, -182.676],
+#                 [-1.6277, -11.2366, 1.18151, -12.4243],
+#                 [10.5214, -1.93319, -3.97967, 83.7326],
+#                 [      0,        0,       0,        1]])
 
 def read_vio(points):
     pts_file = './files/points.txt'
@@ -76,7 +76,7 @@ def readVIO(pos):
     f.close()
 
 def read_gt(x_path, y_path, z_path, odometry):
-    file_path = './files/kitti_09_gt_part.txt'
+    file_path = './files/kitti_09_gt_part_align.txt'
     with open(file_path, 'r') as f:
         for line in f.readlines():
             line = line.strip()
