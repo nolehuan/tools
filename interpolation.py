@@ -11,9 +11,10 @@ def interpolation():
         for line in infile.readlines():
             line = line.strip()
             pose = line.split(' ')
-            pose[0] = str(start + (end - start) * count / total)
+            pose[0] = str(round(start + (end - start) * count / total, 6))
             for i in range(8):
                 outfile.write(pose[i])
+                outfile.write(' ')
             outfile.write('\n')
             count += 1
             
