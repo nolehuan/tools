@@ -106,8 +106,6 @@ maxlabel = max(estimator.labels_)
 # outliers = np.vstack((outliers, inliers[label_pred != maxlabel]))
 outliers = inliers[label_pred != maxlabel]
 inliers = inliers[label_pred == maxlabel]
-
-# inliers = inliers[inliers[:, 0].argsort()] # sort by col
 '''
 
 x = inliers[:, 0]
