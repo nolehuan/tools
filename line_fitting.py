@@ -94,11 +94,8 @@ plt.show()
 '''
 
 inliers = points
-inliers = points[: points.shape[0] // 2, :]
 
-# inliers = np.array([point for point in points if point[2] < -4.7 and point[2] > -5.5])
-# outliers = np.array([point for point in points if point[2] > -4.7 or point[2] < -5.5])
-
+'''
 # estimator = DBSCAN(eps=0.3, min_samples=40)
 # estimator = DBSCAN(eps=0.29, min_samples=8)
 estimator = DBSCAN(eps=50, min_samples=5)
@@ -111,6 +108,8 @@ outliers = inliers[label_pred != maxlabel]
 inliers = inliers[label_pred == maxlabel]
 
 # inliers = inliers[inliers[:, 0].argsort()] # sort by col
+'''
+
 x = inliers[:, 0]
 y = inliers[:, 1]
 z = inliers[:, 2]
@@ -126,9 +125,9 @@ ax.set_ylim3d(-150, 100)
 ax.set_zlim3d(200, 450)
 plt.show()
 
+'''
 u = np.arange(len(x))
-# s = 0.02 * len(u)
-s = 0.04 * len(u)
+s = 0.02 * len(u)
 spx = UnivariateSpline(u, x, s = s)
 # spx.set_smoothing_factor(0.6)
 spy = UnivariateSpline(u, y, s = s)
@@ -138,6 +137,7 @@ spz = UnivariateSpline(u, z, s = s)
 x_new = spx(u)
 y_new = spy(u)
 z_new = spz(u)
+'''
 
 # x-y x-z
 '''
@@ -153,7 +153,7 @@ line_y_ransac = ransac_y.predict(R)
 ransac_z = linear_model.RANSACRegressor()
 ransac_z.fit(R, z)
 line_z_ransac = ransac_z.predict(R)
-
+'''
 '''
 x = np.sort(x)
 X = x.reshape(-1, 1)
@@ -175,27 +175,27 @@ ax = fig.add_subplot(212)
 ax.plot(x, z, 'b.')
 ax.plot(x, line_z_ransac, 'g.')
 plt.show()
-
-
-
 '''
+
+
+# '''
 # 3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection = '3d')
 ax.plot3D(x, y, z, 'b.')
-ax.plot3D(line_x_ransac, line_y_ransac, line_z_ransac, 'r.')
+# ax.plot3D(line_x_ransac, line_y_ransac, line_z_ransac, 'r.')
 # ax.plot3D(x, line_y_ransac, line_z_ransac, 'g.')
-# ax.plot3D(x_new, y_new, z_new, 'r.')
+# ax.plot3D(x_new, y_new, z_new, 'g.')
 # ax.plot(x_new, y_new, z_new, label='curve', c='g')
 
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
-# ax.set_xlim3d(-10, 30)
-# ax.set_ylim3d(-10, 30)
-# ax.set_zlim3d(-10, 30)
+ax.set_xlim3d(-150, 100)
+ax.set_ylim3d(-150, 100)
+ax.set_zlim3d(200, 450)
 plt.show()
-'''
+# '''
 
 # with open("./processed_lane0.txt", "w") as f:
 #     for i in range (x_new.shape[0]):
