@@ -46,7 +46,7 @@ if __name__ == "__main__":
         segment11 = points11[start : end, :]
         mean11 = np.mean(segment11, axis=0)
         centroid11.append(mean11)
-    centroid11 = np.array(centroid11)
+    centroid11 = np.array(centroid11) # 89
 
     z_min12 = points12[0, 2]
     z_max12 = points12[-1, 2]
@@ -61,7 +61,7 @@ if __name__ == "__main__":
         segment12 = points12[start : end, :]
         mean12 = np.mean(segment12, axis=0)
         centroid12.append(mean12)
-    centroid12 = np.array(centroid12)
+    centroid12 = np.array(centroid12) # 93
 
     x_min2 = points2[0, 0]
     x_max2 = points2[-1, 0]
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         segment2 = points2[start : end, :]
         mean2 = np.mean(segment2, axis=0)
         centroid2.append(mean2)
-    centroid2 = np.array(centroid2)
+    centroid2 = np.array(centroid2) # 26
 
     '''
     dist_thresh = 2
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     ax.set_ylim3d(-80, 30)
     ax.set_zlim3d(200, 450)
     plt.show()
-
+'''
 with open("./files/centroid.txt", "w") as f:
     i = 0
     for i in range (centroid11.shape[0]):
@@ -175,3 +175,4 @@ with open("./files/centroid.txt", "w") as f:
         s = str(centroid2[i, 0]) + ' ' + str(centroid2[i, 1]) + ' ' + str(centroid2[i, 2]) + '\n'
         f.write(s)
     f.close()
+'''

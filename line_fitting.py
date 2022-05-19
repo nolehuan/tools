@@ -83,7 +83,7 @@ read_gt(x_path, y_path, z_path, odometry)
 fig = plt.figure()
 ax = plt.gca(projection = '3d')
 ax.plot3D(points[:, 0], points[:, 1], points[:, 2], 'b.')
-ax.plot3D(x_path, y_path, z_path, 'g.')
+# ax.plot3D(x_path, y_path, z_path, 'g.')
 # ax.plot3D(xVIO, yVIO, zVIO, 'y.')
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -94,9 +94,8 @@ ax.set_zlim3d(200, 450)
 plt.show()
 # '''
 
-inliers = points
-
 '''
+inliers = points
 # estimator = DBSCAN(eps=0.3, min_samples=40)
 # estimator = DBSCAN(eps=0.29, min_samples=8)
 estimator = DBSCAN(eps=50, min_samples=5)
@@ -107,7 +106,6 @@ maxlabel = max(estimator.labels_)
 # outliers = np.vstack((outliers, inliers[label_pred != maxlabel]))
 outliers = inliers[label_pred != maxlabel]
 inliers = inliers[label_pred == maxlabel]
-'''
 
 x = inliers[:, 0]
 y = inliers[:, 1]
@@ -123,7 +121,7 @@ ax.set_xlim3d(-150, 100)
 ax.set_ylim3d(-150, 100)
 ax.set_zlim3d(200, 450)
 plt.show()
-
+'''
 '''
 u = np.arange(len(x))
 s = 0.02 * len(u)
@@ -179,6 +177,9 @@ plt.show()
 
 # '''
 # 3D
+x = points[:, 0]
+y = points[:, 1]
+z = points[:, 2]
 fig = plt.figure()
 ax = fig.add_subplot(111, projection = '3d')
 ax.plot3D(x, y, z, 'b.')
