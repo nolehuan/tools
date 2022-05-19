@@ -22,8 +22,33 @@ def readRt(Rts):
 # max_t = max(ts[:, 2])
 # min_t = min(ts[:, 2])
 
+'''
+sim3 = np.load('./files/kitti_09_ape/alignment_transformation_sim3.npy')
+path = './files/TriangulatedPoint3d_lane1.txt'
+out_file = './files/lane1.txt'
+with open(path, 'r') as f, open(out_file, 'w') as outf:
+    for line in f.readlines():
+        line = line.strip()
+        point = line.split(' ')
+        if len(point) == 3:
+            tx = float(point[0])
+            ty = float(point[1])
+            tz = float(point[2])
+            t = np.array([tx, ty, tz]).reshape([3, 1])
+            R = sim3[:3, :3].reshape([3, 3])
+            dt = sim3[:3, 3].reshape([3, 1])
+            t = np.dot(R, t) + dt
+            for i in range (3):
+                outf.write(str(round(t[i][0], 6)))
+                if i != 2: outf.write(' ')
+            outf.write('\n')
+f.close()
+outf.close()
+'''
+
 points = []
-path = './TriangulatedPoint3d_lane1.txt'
+path = './files/lane1_filtered3.txt'
+# path = './files/TriangulatedPoint3d_lane1.txt'
 with open(path, 'r') as f:
     for line in f.readlines():
         line = line.strip()
@@ -36,16 +61,36 @@ points = np.array(points).astype('float64')
 # y = points[:, 1]
 # z = points[:, 2]
 
-# fig = plt.figure()
-# ax = plt.gca(projection = '3d')
-# ax.plot3D(points[:, 0], points[:, 1], points[:, 2], 'b.')
-# ax.set_xlabel('X')
-# ax.set_ylabel('Y')
-# ax.set_zlabel('Z')
-# ax.set_xlim3d(-10, 30)
-# ax.set_ylim3d(-10, 30)
-# ax.set_zlim3d(-10, 30)
-# plt.show()
+from sim3 import read_gt
+x_path = []
+y_path = []
+z_path = []
+odometry = [0]
+read_gt(x_path, y_path, z_path, odometry)
+from sim3 import readVIO
+pos = []
+readVIO(pos)
+pos = np.array(pos).reshape([len(pos), 3])
+xVIO = pos[:, 0]
+yVIO = pos[:, 1]
+zVIO = pos[:, 2]
+xVIO = xVIO.tolist()
+yVIO = yVIO.tolist()
+zVIO = zVIO.tolist()
+
+
+fig = plt.figure()
+ax = plt.gca(projection = '3d')
+ax.plot3D(points[:, 0], points[:, 1], points[:, 2], 'b.')
+ax.plot3D(x_path, y_path, z_path, 'g.')
+ax.plot3D(xVIO, yVIO, zVIO, 'y.')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+ax.set_xlim3d(-150, 100)
+ax.set_ylim3d(-150, 100)
+ax.set_zlim3d(200, 450)
+plt.show()
 
 inliers = points
 inliers = points[: points.shape[0] // 2, :]
@@ -54,7 +99,8 @@ inliers = points[: points.shape[0] // 2, :]
 # outliers = np.array([point for point in points if point[2] > -4.7 or point[2] < -5.5])
 
 # estimator = DBSCAN(eps=0.3, min_samples=40)
-estimator = DBSCAN(eps=0.29, min_samples=8)
+# estimator = DBSCAN(eps=0.29, min_samples=8)
+estimator = DBSCAN(eps=50, min_samples=5)
 estimator.fit(inliers)
 label_pred = estimator.labels_
 maxlabel = max(estimator.labels_)
@@ -68,16 +114,16 @@ x = inliers[:, 0]
 y = inliers[:, 1]
 z = inliers[:, 2]
 
-# fig = plt.figure()
-# ax = plt.gca(projection = '3d')
-# ax.plot3D(x, y, z, 'b.')
-# ax.set_xlabel('X')
-# ax.set_ylabel('Y')
-# ax.set_zlabel('Z')
-# # ax.set_xlim3d(-10, 30)
-# # ax.set_ylim3d(-10, 30)
-# # ax.set_zlim3d(-10, 30)
-# plt.show()
+fig = plt.figure()
+ax = plt.gca(projection = '3d')
+ax.plot3D(x, y, z, 'b.')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+ax.set_xlim3d(-150, 100)
+ax.set_ylim3d(-150, 100)
+ax.set_zlim3d(200, 450)
+plt.show()
 
 u = np.arange(len(x))
 # s = 0.02 * len(u)
