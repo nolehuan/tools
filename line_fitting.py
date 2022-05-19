@@ -60,7 +60,7 @@ points = np.array(points).astype('float64')
 # x = points[:, 0]
 # y = points[:, 1]
 # z = points[:, 2]
-
+'''
 from sim3 import read_gt
 x_path = []
 y_path = []
@@ -91,6 +91,7 @@ ax.set_xlim3d(-150, 100)
 ax.set_ylim3d(-150, 100)
 ax.set_zlim3d(200, 450)
 plt.show()
+'''
 
 inliers = points
 inliers = points[: points.shape[0] // 2, :]
