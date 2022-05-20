@@ -75,8 +75,7 @@ def readVIO(pos):
 
     f.close()
 
-def read_gt(x_path, y_path, z_path, odometry):
-    file_path = './files/kitti_09_gt_part_align.txt'
+def read_gt(file_path, x_path, y_path, z_path, odometry):
     with open(file_path, 'r') as f:
         for line in f.readlines():
             line = line.strip()
@@ -98,7 +97,8 @@ if __name__ == '__main__':
     y_path = []
     z_path = []
     odometry = [0]
-    read_gt(x_path, y_path, z_path, odometry)
+    file_path = './files/kitti_09_gt_part_align.txt'
+    read_gt(file_path, x_path, y_path, z_path, odometry)
 
     pos = []
     readVIO(pos)

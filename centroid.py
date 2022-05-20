@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def read_pts(points):
-    path = './files/lane1_filtered3.txt'
+
+def read_pts(points, path):
     with open(path, 'r') as f:
         for line in f.readlines():
             line = line.strip()
@@ -12,7 +12,8 @@ def read_pts(points):
 
 if __name__ == "__main__":
     points = []
-    read_pts(points)
+    path = './files/lane1_filtered3.txt'
+    read_pts(points, path)
     points = np.array(points).astype('float64')
     indice = points[:, 2].argsort()
     points = points[indice] # sort by z

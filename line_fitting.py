@@ -4,7 +4,7 @@ from sklearn import linear_model
 from sklearn.cluster import DBSCAN
 from matplotlib import pyplot as plt
 from scipy.interpolate import UnivariateSpline
-
+import math
 
 def readRt(Rts):
     Rt_path = './odom09.txt'
@@ -50,24 +50,19 @@ points = []
 path = './files/centroid.txt'
 # path = './files/lane1_filtered3.txt'
 # path = './files/TriangulatedPoint3d_lane1.txt'
-with open(path, 'r') as f:
-    for line in f.readlines():
-        line = line.strip()
-        point = line.split(' ')
-        if len(point) == 3: points.append(point)
-f.close()
+from centroid import read_pts
+read_pts(points, path)
 points = np.array(points).astype('float64')
-# points = points[points[:, 2].argsort()] # sort by col
-# x = points[:, 0]
-# y = points[:, 1]
-# z = points[:, 2]
-# '''
+
+
 from sim3 import read_gt
 x_path = []
 y_path = []
 z_path = []
 odometry = [0]
-read_gt(x_path, y_path, z_path, odometry)
+file_path = './files/kitti_09_gt_part_align.txt'
+read_gt(file_path, x_path, y_path, z_path, odometry)
+print(odometry[-1])
 # from sim3 import readVIO
 # pos = []
 # readVIO(pos)
@@ -79,7 +74,7 @@ read_gt(x_path, y_path, z_path, odometry)
 # yVIO = yVIO.tolist()
 # zVIO = zVIO.tolist()
 
-
+'''
 fig = plt.figure()
 ax = plt.gca(projection = '3d')
 ax.plot3D(points[:, 0], points[:, 1], points[:, 2], 'b.')
@@ -92,7 +87,7 @@ ax.set_xlim3d(-150, 100)
 ax.set_ylim3d(-150, 100)
 ax.set_zlim3d(200, 450)
 plt.show()
-# '''
+'''
 
 '''
 inliers = points
@@ -174,6 +169,60 @@ ax.plot(x, line_z_ransac, 'g.')
 plt.show()
 '''
 
+# segment
+x_fit = []
+y_fit = []
+z_fit = []
+# 1-87 == > 1--95
+for x in range(-113, 61):
+    x_norm = (x + 18.74) / 54.52
+    y = -0.2916*(x_norm**5)+0.1924*(x_norm**4)+1.877*(x_norm**3)+0.7459*(x_norm**2)-7.951*x_norm-24.61
+    z = 2.881*(x_norm**5)-0.8038*(x_norm**4)-0.9667*(x_norm**3)+11.66*(x_norm**2)+18.85*x_norm+242.2
+    x_fit.append(x)
+    y_fit.append(y)
+    z_fit.append(z)
+# 88-190 ==> 70-200
+z = 305
+# for z in range(306, 525):
+while z < 526.5:
+    if z > 515: z += 0.5
+    elif z > 500: z += 1
+    else: z += 1.5
+    z_norm = (z - 402.6) / 79.97
+    x = 2.738*(z_norm**7)+2.991*(z_norm**6)-8.286*(z_norm**5)-4.581*(z_norm**4)+17.26*(z_norm**3)-13.99*(z_norm**2)-23.88*z_norm+71.71
+    # y = 0.2691*(z_norm**7)+0.4681*(z_norm**6)-1.457*(z_norm**5)-1.487*(z_norm**4)+3.346*(z_norm**3)+1.462*(z_norm**2)-2.919*z_norm-30.79
+    y = -0.3637*(z_norm**5)+0.2437*(z_norm**4)+2.132*(z_norm**3)-0.07085*(z_norm**2)-2.589*z_norm-30.59
+    x_fit.append(x)
+    y_fit.append(y)
+    z_fit.append(z)
+# 191-208 ==> 184-208
+for x in range(67, 100):
+    x_norm = (x - 69.68) / 15.3
+    z = 0.7733*(x_norm**3)-4.198*(x_norm**2)+3.379*x_norm+529.2
+    y = 0.004936*(x_norm**3)+0.07386*(x_norm**2)+1.425*x_norm-28.29
+    x_fit.append(x)
+    y_fit.append(y)
+    z_fit.append(z)
+
+x_fit = np.array(x_fit)
+y_fit = np.array(y_fit)
+z_fit = np.array(z_fit)
+
+fit_odom = [0]
+for i in range(1, z_fit.shape[0]):
+    fit_odom.append(fit_odom[-1] + math.sqrt((x_fit[i] - x_fit[i-1])**2 + (y_fit[i] - y_fit[i-1])**2 + (z_fit[i] - z_fit[i-1])**2))
+print(fit_odom[-1])
+print(z_fit.shape[0])
+print(len(odometry))
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(odometry, y_path, label='odom path', c='c')
+ax.plot(fit_odom, y_fit, label='odom path', c='m')
+ax.set_xlim(0, 500)
+ax.set_ylim(-250, 250)
+plt.show()
+
 
 # '''
 # 3D
@@ -182,7 +231,9 @@ y = points[:, 1]
 z = points[:, 2]
 fig = plt.figure()
 ax = fig.add_subplot(111, projection = '3d')
-ax.plot3D(x, y, z, 'b.')
+# ax.plot3D(x, y, z, 'b.')
+ax.plot3D(x_fit, y_fit, z_fit, 'c.')
+ax.plot3D(x_path, y_path, z_path, 'm.')
 # ax.plot3D(line_x_ransac, line_y_ransac, line_z_ransac, 'r.')
 # ax.plot3D(x, line_y_ransac, line_z_ransac, 'g.')
 # ax.plot3D(x_new, y_new, z_new, 'g.')
@@ -192,22 +243,16 @@ ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 ax.set_xlim3d(-150, 100)
-ax.set_ylim3d(-150, 100)
+ax.set_ylim3d(-80, 30)
 ax.set_zlim3d(200, 450)
 plt.show()
 # '''
 
-# with open("./processed_lane0.txt", "w") as f:
-#     for i in range (x_new.shape[0]):
-#         # s = str(line_x_ransac[i]) + ' ' + str(line_y_ransac[i]) + ' ' + str(zz[i]) + '\n'
-#         s = str(x_new[i]) + ' ' + str(y_new[i]) + ' ' + str(z_new[i]) + '\n'
-#         f.write(s)
-#     f.write('\n')
-#     for i in range (inliers.shape[0]):
-#         s = str(inliers[i][0]) + ' ' + str(inliers[i][1]) + ' ' + str(inliers[i][2]) + '\n'
-#         f.write(s)
-#     f.write('\n')
-#     for i in range (outliers.shape[0]):
-#         s = str(outliers[i][0]) + ' ' + str(outliers[i][1]) + ' ' + str(outliers[i][2]) + '\n'
-#         f.write(s)
-#     f.close()
+'''
+with open("./files/centroid_split_fit.txt", "w") as f:
+    i = 0
+    for i in range (x_fit.shape[0]):
+        s = str(x_fit[i]) + ' ' + str(y_fit[i]) + ' ' + str(z_fit[i]) + '\n'
+        f.write(s)
+    f.close()
+'''
