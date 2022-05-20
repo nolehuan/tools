@@ -7,16 +7,16 @@ from sim3 import read_gt
 
 if __name__ == "__main__":
     points = []
-    path = "./files/centroid_split_fit.txt"
-    read_pts(points, path)
+    pts_path = "./files/centroid_split_fit.txt"
+    read_pts(points, pts_path)
     points = np.array(points).astype('float64')
     
     x_path = []
     y_path = []
     z_path = []
     odometry = [0]
-    file_path = './files/kitti_09_gt_part_align.txt'
-    read_gt(file_path, x_path, y_path, z_path, odometry)
+    gt_path = './files/kitti_09_gt_part_align.txt'
+    read_gt(gt_path, x_path, y_path, z_path, odometry)
     # xyz = np.vstack([x_path, y_path, z_path]).reshape([len(x_path), 3])
 
     align_points = [points[0, :]]
@@ -50,3 +50,25 @@ if __name__ == "__main__":
     ax.set_ylim3d(-80, 30)
     ax.set_zlim3d(200, 450)
     plt.show()
+
+    '''
+    timestamps = []
+    with open(gt_path, 'r') as f:
+        for line in f.readlines():
+            line = line.strip()
+            pose = line.split(' ')
+            if len(pose) == 8:
+                timestamps.append(pose[0])
+        f.close()
+    timestamps = np.array(timestamps).astype('float64')
+    assert timestamps.shape[0] == align_points.shape[0], "error"
+    with open("./files/centroid_fit_align.txt", "w") as f:
+        i = 0
+        for i in range (align_points.shape[0]):
+            s = str(round(timestamps[i], 6)) + ' '
+            s += str(round(align_points[i, 0], 7)) + ' ' + str(round(align_points[i, 1], 7)) + ' ' + str(round(align_points[i, 2], 7))
+            s += ' 1 0 0 0\n'
+            f.write(s)
+        f.close()
+    '''
+

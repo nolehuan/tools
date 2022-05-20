@@ -184,7 +184,7 @@ for x in range(-113, 61):
 # 88-190 ==> 70-200
 z = 305
 # for z in range(306, 525):
-while z < 526.5:
+while z < 526:
     if z > 515: z += 0.5
     elif z > 500: z += 1
     else: z += 1.5
