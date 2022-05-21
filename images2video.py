@@ -1,11 +1,24 @@
 import cv2
 import glob
+import time
 
-images = sorted(glob.glob('../dataset/CULane/driver_23_30frame/05151640_0419.MP4/*.jpg'))
+images = glob.glob('../LoFTR/assets/odometry/09/result/*.png')
+idx = [float(image[-8 : -4]) for image in images]
 
-fps = 25
-size = (1640, 590)
-videoWriter = cv2.VideoWriter('./culane.mp4', cv2.VideoWriter_fourcc(*"mp4v"), fps, size)
-for i in range (len(images)):
+# images = sorted(glob.glob('../LoFTR/assets/odometry/09/masked/*.png'))
+
+fps = 20
+size = (729, 108)
+# fps = 30
+# size = (1226, 370)
+vWriter = cv2.VideoWriter('../loftr.mp4', cv2.VideoWriter_fourcc(*"mp4v"), fps, size)
+# vWriter = cv2.VideoWriter('../ld.mp4', cv2.VideoWriter_fourcc(*"mp4v"), fps, size)
+for i in range (18, 278): # 152-636
+# for i in range (60, 297): # 152-636
     frame = cv2.imread(images[i], -1)
-    videoWriter.write(frame)
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+    vWriter.write(frame)
+    time.sleep(0.005)
+vWriter.release()
+cv2.destroyAllWindows()
+
