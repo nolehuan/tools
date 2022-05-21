@@ -134,7 +134,8 @@ if __name__ == "__main__":
     y_path = []
     z_path = []
     odometry = [0]
-    read_gt(x_path, y_path, z_path, odometry)
+    file_path = './files/kitti_09_gt_part_align.txt'
+    read_gt(file_path, x_path, y_path, z_path, odometry)
     x_path1 = x_path[:410]
     y_path1 = y_path[:410]
     z_path1 = z_path[:410]
@@ -145,13 +146,14 @@ if __name__ == "__main__":
     fig = plt.figure()
     ax = plt.gca(projection = '3d')
     # ax.plot3D(x, y, z, 'b.')
+    ax.scatter(x, y, z, c='c', s=4)
     # ax.plot3D(points11[:, 0], points11[:, 1], points11[:, 2], 'b.')
-    ax.plot3D(centroid11[:, 0], centroid11[:, 1], centroid11[:, 2], 'm.')
+    # ax.plot3D(centroid11[:, 0], centroid11[:, 1], centroid11[:, 2], 'm.')
     # ax.plot3D(points12[:, 0], points12[:, 1], points12[:, 2], 'b.')
-    ax.plot3D(centroid12[:, 0], centroid12[:, 1], centroid12[:, 2], 'm.')
+    # ax.plot3D(centroid12[:, 0], centroid12[:, 1], centroid12[:, 2], 'm.')
     # ax.plot3D(centroid1[:, 0], centroid1[:, 1], centroid1[:, 2], 'y.')
     # ax.plot3D(points2[:, 0], points2[:, 1], points2[:, 2], 'b.')
-    ax.plot3D(centroid2[:, 0], centroid2[:, 1], centroid2[:, 2], 'm.')
+    # ax.plot3D(centroid2[:, 0], centroid2[:, 1], centroid2[:, 2], 'm.')
     # ax.plot3D(x_path1, y_path1, z_path1, 'r.')
     # ax.plot3D(x_path2, y_path2, z_path2, 'c.')
     ax.set_xlabel('X')

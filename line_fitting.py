@@ -215,12 +215,19 @@ print(fit_odom[-1])
 print(z_fit.shape[0])
 print(len(odometry))
 
+print(y_path[0])
+print(y_fit[0])
+y_path = np.array(y_path) + y_fit[0] - y_path[0]
+y_fit = np.array(y_fit)
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.plot(odometry, y_path, label='odom path', c='c')
-ax.plot(fit_odom, y_fit, label='odom path', c='m')
+ax.plot(odometry, -y_path, label='GNSS', c='c')
+ax.plot(fit_odom, -y_fit, label='Ours', c='m')
 ax.set_xlim(0, 500)
-ax.set_ylim(-250, 250)
+ax.set_ylim(-10, 60)
+ax.set_xlabel('Mileage(m)')
+ax.set_ylabel('Elevation(m)')
+ax.legend()
 plt.show()
 
 
