@@ -1,3 +1,4 @@
+from cProfile import label
 import numpy as np
 from numpy.core.fromnumeric import shape
 from sklearn import linear_model
@@ -239,13 +240,15 @@ z = points[:, 2]
 fig = plt.figure()
 ax = fig.add_subplot(111, projection = '3d')
 # ax.plot3D(x, y, z, 'b.')
-ax.plot3D(x_fit, y_fit, z_fit, 'c.')
+# ax.plot3D(x_fit, y_fit, z_fit, 'c.')
 # ax.plot3D(x_path, y_path, z_path, 'm.')
+ax.scatter(x_fit, y_fit, z_fit, c='c', s=1, label='Ours')
+ax.scatter(x_path, y_path, z_path, c='m', s=1, label='GNSS')
 # ax.plot3D(line_x_ransac, line_y_ransac, line_z_ransac, 'r.')
 # ax.plot3D(x, line_y_ransac, line_z_ransac, 'g.')
 # ax.plot3D(x_new, y_new, z_new, 'g.')
 # ax.plot(x_new, y_new, z_new, label='curve', c='g')
-# ax.legend()
+ax.legend()
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
