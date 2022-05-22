@@ -217,8 +217,8 @@ print(len(odometry))
 
 print(y_path[0])
 print(y_fit[0])
-y_path = np.array(y_path) + y_fit[0] - y_path[0]
-y_fit = np.array(y_fit)
+y_path = np.array(y_path) - y_path[0]
+y_fit = np.array(y_fit) - y_fit[0]
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.plot(odometry, -y_path, label='GNSS', c='c')
