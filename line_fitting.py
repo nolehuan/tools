@@ -216,6 +216,20 @@ print(fit_odom[-1])
 print(z_fit.shape[0])
 print(len(odometry))
 
+y_path = np.array(y_path) - y_path[0]
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(odometry[:300], -y_path[:300], c='c')
+ax.set_xlabel('s')
+# ax.set_ylabel(r'$\theta(s)$')
+ax.set_ylabel('h(s)')
+ax.set_xlim(0, 350)
+ax.set_ylim(0, 30)
+plt.xticks([])
+plt.yticks([])
+# plt.axis('off')
+plt.show()
+
 print(y_path[0])
 print(y_fit[0])
 y_path = np.array(y_path) - y_path[0]
