@@ -32,6 +32,7 @@ class EMA():
                 param.data = self.backup[name]
         self.backup = {}
 
+'''
 # 初始化
 ema = EMA(model, 0.999)
 ema.register()
@@ -46,3 +47,4 @@ def evaluate():
     ema.apply_shadow()
     # evaluate
     ema.restore()
+'''
