@@ -5,6 +5,13 @@ from torch import functional as F
 import time
 
 
+x = torch.randn(2,3)
+print(x)
+print(x.view(-1))
+
+x = torch.LongTensor(2)
+print(x)
+
 yv, xv = torch.meshgrid(torch.arange(4), torch.arange(6))
 print(yv)
 print(xv)
