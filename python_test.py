@@ -2,7 +2,26 @@ import os
 import random
 import uuid
 import numpy as np
+import cv2
+import math
 
+center = (3.0, 4.0)
+angle = 3.0
+scale = 2.0
+R =cv2.getRotationMatrix2D(center, angle, scale)
+print(R)
+angle = angle * math.pi / 180
+M = np.array([
+[   scale * math.cos(angle), scale * math.sin(angle), (1 - scale * math.cos(angle)) * center[0] - scale * math.sin(angle) * center[1] ],
+[ - scale * math.sin(angle), scale * math.cos(angle), (1 - scale * math.cos(angle)) * center[1] + scale * math.sin(angle) * center[0] ]])
+print(M)
+
+x = np.full((2, 3), 7, dtype=np.uint8)
+print(x)
+
+idx = [0, 2, 4, 6]
+for i, j in enumerate(idx):
+    print(i, j)
 
 print("{:06}".format(1))
 
