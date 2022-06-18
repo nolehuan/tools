@@ -5,6 +5,11 @@ import numpy as np
 import cv2
 import math
 
+
+
+
+print(os.cpu_count())
+
 center = (3.0, 4.0)
 angle = 3.0
 scale = 2.0
