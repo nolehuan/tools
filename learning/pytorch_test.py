@@ -5,6 +5,19 @@ from torch import functional as F
 import time
 
 
+
+
+
+x = torch.randint(0, 6, (2, 3))
+x = x.float()
+print(x)
+
+g = torch.Generator()
+g.manual_seed(1)
+print(torch.randperm(10, generator=g))
+
+print(torch.arange(10))
+
 x = torch.randn(2,3)
 print(x)
 print(x.view(-1))
