@@ -4,8 +4,28 @@ import uuid
 import numpy as np
 import cv2
 import math
+import io
+import itertools
 
+# l = [1, 2, 3]
+l = [[1, 2, 3], [4, 5, 6]]
+print(l)
+print(*l)
 
+res = itertools.zip_longest('abc', '12')
+print(res)
+for x in res:
+    print(x)
+
+x = list([1, 2, 3, 4, 5, 6])
+print(x[1::2])
+
+s = io.StringIO()
+s.write("hello")
+print(s.getvalue())
+
+x = 0.02
+print(f"xx {x:.3f}")
 
 x = np.array([1])
 print(x)
