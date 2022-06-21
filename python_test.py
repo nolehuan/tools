@@ -7,6 +7,17 @@ import math
 
 
 
+x = np.array([1])
+print(x)
+print(x.item())
+
+for maindir, subdir, file_name_list in os.walk("./vision/"):
+    print(maindir)
+    print(subdir)
+    for filename in file_name_list:
+        print(filename)
+        path = os.path.join(maindir, filename)
+        print(os.path.splitext(path))
 
 print(os.cpu_count())
 
