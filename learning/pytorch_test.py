@@ -5,8 +5,25 @@ from torch import functional as F
 import time
 
 
-
-
+pred = torch.tensor([1, 2, 3, 4, 5, 6, 7, 8])
+target = torch.tensor([5, 6, 7, 8, 1, 2, 3, 4])
+pred = pred.view(-1, 4)
+target = target.view(-1, 4)
+p = torch.prod(pred[:, 2:], 1)
+print(p)
+tl = torch.min((pred[:, :2] - pred[:, 2:]), (target[:, :2] - target[:, 2:]))
+br = torch.max((pred[:, :2] + pred[:, 2:]), (target[:, :2] + target[:, 2:]))
+print(tl)
+print(br)
+en = (tl < br).type(tl.type())
+print(en)
+en = en.prod(dim=1)
+print(en)
+print(br - tl)
+ai = torch.prod(br - tl, 1)
+print(ai)
+ai = ai * en
+print(ai)
 
 x = torch.randint(0, 6, (2, 3))
 x = x.float()
