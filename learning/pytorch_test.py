@@ -4,6 +4,18 @@ import numpy as np
 from torch import functional as F
 import time
 
+yv, xv = torch.meshgrid(torch.arange(4), torch.arange(6))
+print(yv)
+print(xv)
+grid = torch.stack((xv, yv), 2)
+print(grid)
+grid = grid.view(1, -1, 2)
+print(grid)
+
+shape = grid.shape[:2]
+stride = 2.0
+full = torch.full((*shape, 1), stride)
+print(full)
 
 pred = torch.tensor([1, 2, 3, 4, 5, 6, 7, 8])
 target = torch.tensor([5, 6, 7, 8, 1, 2, 3, 4])
@@ -42,18 +54,6 @@ print(x.view(-1))
 x = torch.LongTensor(2)
 print(x)
 
-yv, xv = torch.meshgrid(torch.arange(4), torch.arange(6))
-print(yv)
-print(xv)
-grid = torch.stack((xv, yv), 2)
-print(grid)
-grid = grid.view(1, -1, 2)
-print(grid)
-
-shape = grid.shape[:2]
-stride = 2.0
-full = torch.full((*shape, 1), stride)
-print(full)
 
 '''
 x = torch.random([1, 3, 64, 64])
