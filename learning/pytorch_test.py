@@ -4,6 +4,19 @@ import numpy as np
 from torch import functional as F
 import time
 
+x = torch.zeros(1, 6)
+xs = []
+xs.append(x)
+xs.append(x)
+print(xs)
+xs = torch.cat(xs, 1)
+print(xs)
+
+x = torch.zeros(1, 3).bool()
+print(x)
+y = x.new_zeros(2,4)
+print(y)
+
 yv, xv = torch.meshgrid(torch.arange(4), torch.arange(6))
 print(yv)
 print(xv)
