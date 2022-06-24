@@ -1,8 +1,44 @@
 import torch
 from torch import nn
 import numpy as np
-from torch import functional as F
+import torch.nn.functional as F
 import time
+
+
+
+
+
+
+
+
+
+label = torch.tensor([0, 2, 1])
+x = F.one_hot(label, 3)
+print(x)
+
+x = torch.tensor([[1, 2, 3, 4], [5, 6, 7, 8]]).to(torch.float32)
+print(x.shape)
+print(x[:, None, :2])
+
+x = torch.tensor([1, 2, 3])
+x = x.unsqueeze(1).repeat(1, 2)
+print(x)
+print(x.shape)
+y = torch.stack([x, x], 2)
+print(y)
+print(y.shape)
+idx1 = y.min(dim=-1).values > 2
+print(idx1)
+idx1_ = idx1.sum(dim=0) > 1
+print(idx1_)
+idx2 = y.min(dim=-1).values > 1
+print(idx2)
+idx2_ = idx2.sum(dim=0) > 1
+print(idx2_)
+idx = idx1_ | idx2_
+print(idx)
+id = idx1[:, idx] & idx2[:, idx]
+print(id)
 
 x = torch.zeros(1, 6)
 xs = []

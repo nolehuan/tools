@@ -7,6 +7,10 @@ import math
 import io
 import itertools
 
+
+
+# cv2.Scharr()
+
 # l = [1, 2, 3]
 l = [[1, 2, 3], [4, 5, 6]]
 print(l)
