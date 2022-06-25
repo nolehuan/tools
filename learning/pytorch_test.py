@@ -9,17 +9,6 @@ import time
 
 
 
-
-
-
-label = torch.tensor([0, 2, 1])
-x = F.one_hot(label, 3)
-print(x)
-
-x = torch.tensor([[1, 2, 3, 4], [5, 6, 7, 8]]).to(torch.float32)
-print(x.shape)
-print(x[:, None, :2])
-
 x = torch.tensor([1, 2, 3])
 x = x.unsqueeze(1).repeat(1, 2)
 print(x)
@@ -39,6 +28,51 @@ idx = idx1_ | idx2_
 print(idx)
 id = idx1[:, idx] & idx2[:, idx]
 print(id)
+mask = torch.tensor([1, 2])
+mask = mask > 1
+print(mask)
+n = mask.sum().item()
+print(n)
+idx[idx.clone()] = mask
+print(idx)
+print(mask)
+
+x = torch.randperm(3)
+x = x.tolist()
+print(x)
+
+x = torch.randperm(3)
+x = x.unsqueeze(0).unsqueeze(-1)
+x = x.repeat(2, 1, 1).repeat(1, 1, 2).float()
+print(x)
+x.sigmoid_()
+print(x)
+print(x.shape)
+x.sqrt_()
+print(x)
+loss = F.binary_cross_entropy(x, x, reduction="none")
+print(loss)
+print(loss.sum(-1))
+
+x = torch.randint(0, 3, (1, 3))
+print(x)
+x = torch.rand([2, 3])
+y = torch.randn([2, 3])
+z = torch.normal(mean=torch.arange(1, 11.), std=torch.arange(1, 0, -0.1))
+z = torch.normal(2, 3, size=(2,3))
+u = torch.randperm(3)
+print(x)
+print(y)
+print(z)
+print(u)
+
+label = torch.tensor([0, 2, 1])
+x = F.one_hot(label, 3)
+print(x)
+
+x = torch.tensor([[1, 2, 3, 4], [5, 6, 7, 8]]).to(torch.float32)
+print(x.shape)
+print(x[:, None, :2])
 
 x = torch.zeros(1, 6)
 xs = []
