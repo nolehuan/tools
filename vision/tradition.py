@@ -37,4 +37,4 @@ def watershed_algorithm(image_path):
     cv2.waitKey(0)
 
 if __name__ == "__main__":
-    watershed_algorithm("./.png")
+    watershed_algorithm("./files/global.png")

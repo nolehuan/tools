@@ -5,9 +5,10 @@ import torch.nn.functional as F
 import time
 
 
-
-
-
+block_mem = 512
+x = torch.cuda.FloatTensor(256, 1024, block_mem)
+print(x)
+del x
 
 x = torch.tensor([1, 2, 3])
 x = x.unsqueeze(1).repeat(1, 2)
