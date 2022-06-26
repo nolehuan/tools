@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 if __name__ == "__main__":
     image = cv2.imread("", -1)
@@ -12,9 +13,21 @@ if __name__ == "__main__":
 
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     opening = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=2)
-    bg = cv2.dilate(opening, kernel, iterations=3)
-    cv2.imshow("bg", bg)
+    sure_bg = cv2.dilate(opening, kernel, iterations=3)
+    cv2.imshow("sure_bg", sure_bg)
     cv2.waitKey(0)
 
     dist = cv2.distanceTransform(opening, cv2.DIST_L2, maskSize=3)
     dist = cv2.normalize(dist, alpha=0, beta=1, normType=cv2.NORM_MINMAX)
+    _, surface = cv2.threshold(dist, dist.max() * 0.6, 255, cv2.THRESH_BINARY)
+
+    surface_fg = np.uint8(surface)
+    unknown = cv2.subtract(sure_bg, surface_fg)
+    _, markers = cv2.connectedComponents(surface_fg)
+
+    markers += 1
+    markers[unknown == 255] = 0
+    markers = cv2.watershed(image, markers=markers)
+    image[markers == -1] = [0, 0, 255]
+    cv2.imshow("result", image)
+    cv2.waitKey(0)
