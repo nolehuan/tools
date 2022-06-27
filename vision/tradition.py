@@ -13,8 +13,8 @@ def watershed_algorithm(image_path):
 
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     opening = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=2)
-    sure_bg = cv2.dilate(opening, kernel, iterations=3)
-    cv2.imshow("sure_bg", sure_bg)
+    dilate = cv2.dilate(opening, kernel, iterations=3)
+    cv2.imshow("dilate", dilate)
     cv2.waitKey(0)
 
     dist = cv2.distanceTransform(opening, cv2.DIST_L2, maskSize=3)
@@ -24,7 +24,7 @@ def watershed_algorithm(image_path):
     cv2.waitKey(0)
 
     surface_fg = np.uint8(surface)
-    unknown = cv2.subtract(sure_bg, surface_fg)
+    unknown = cv2.subtract(dilate, surface_fg)
     _, markers = cv2.connectedComponents(surface_fg)
     print(markers)
 
