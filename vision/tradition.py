@@ -1,8 +1,9 @@
+from copy import deepcopy
 import cv2
 import numpy as np
 
-def watershed_algorithm(image_path):
-    image = cv2.imread(image_path, -1)
+def watershed_algorithm(image):
+
     blur = cv2.pyrMeanShiftFiltering(image, sp=10, sr=100)
     cv2.imshow("blur", blur)
     cv2.waitKey(0)
@@ -18,8 +19,9 @@ def watershed_algorithm(image_path):
     cv2.waitKey(0)
 
     dist = cv2.distanceTransform(opening, cv2.DIST_L2, maskSize=3)
-    dist = cv2.normalize(dist, alpha=0, beta=1, normType=cv2.NORM_MINMAX)
-    _, surface = cv2.threshold(dist, dist.max() * 0.6, 255, cv2.THRESH_BINARY)
+    dist_out = deepcopy(dist)
+    cv2.normalize(dist, dist_out, 0, 1.0, cv2.NORM_MINMAX)
+    _, surface = cv2.threshold(dist_out, dist_out.max() * 0.6, 255, cv2.THRESH_BINARY)
     cv2.imshow("surface", surface)
     cv2.waitKey(0)
 
@@ -36,4 +38,7 @@ def watershed_algorithm(image_path):
     cv2.waitKey(0)
 
 if __name__ == "__main__":
-    watershed_algorithm("./files/global.png")
+    image_path = "./files/money.jpg"
+    image = cv2.imread(image_path, -1)
+    image = cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)
+    watershed_algorithm(image)
