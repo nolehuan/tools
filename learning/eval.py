@@ -92,7 +92,8 @@ def compute_ap(recall, precision):
 
     # to calculate area under PR curve, look for points
     # where X axis (recall) changes value
-    i = np.where(mrec[:-1] != mrec[1:])[0]
+    tuple_i = np.where(mrec[:-1] != mrec[1:])
+    i = tuple_i[0]
 
     # and sum (\Delta recall) * prec
     ap = np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])

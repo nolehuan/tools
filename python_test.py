@@ -6,8 +6,27 @@ import cv2
 import math
 import io
 import itertools
+import datetime
 
 
+
+x = np.linspace(0, 5, 6, endpoint=True)
+print(x)
+x = np.linspace(0, 5, 6, endpoint=False)
+print(x)
+
+x = np.empty((0, 5))
+print(x)
+
+print(datetime.timedelta(seconds=100))
+
+def test(a, b, c):
+    print(a)
+    print(b)
+    print(c)
+d = {'a':'A','b':'B','c':'C'}
+test(*d)
+test(**d)
 
 # cv2.Scharr()
 
