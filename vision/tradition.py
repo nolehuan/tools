@@ -28,7 +28,7 @@ def watershed_algorithm(image_path):
     _, markers = cv2.connectedComponents(surface_fg)
     print(markers)
 
-    markers += 1
+    markers += 1 # Add one to all labels so that sure background is not 0, but 1
     markers[unknown == 255] = 0
     markers = cv2.watershed(image, markers=markers)
     image[markers == -1] = [0, 0, 255]
