@@ -11,7 +11,6 @@ def watershed_algorithm(image_path):
     cv2.imshow("binary", binary)
     cv2.waitKey(0)
 
-    # 形态学操作 距离变换 寻找种子
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     opening = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=2)
     sure_bg = cv2.dilate(opening, kernel, iterations=3)
