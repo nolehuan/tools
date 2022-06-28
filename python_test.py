@@ -10,6 +10,10 @@ import datetime
 
 
 
+
+x = np.array([1,2,2,3,3,4])
+print(np.where(x[:-1] == x[1:]))
+
 x = np.linspace(0, 5, 6, endpoint=True)
 print(x)
 x = np.linspace(0, 5, 6, endpoint=False)
