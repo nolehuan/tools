@@ -1,5 +1,3 @@
-from turtle import shape
-from cv2 import _OUTPUT_ARRAY_DEPTH_MASK_16U
 import numpy as np
 
 class Conv(object):
