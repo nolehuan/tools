@@ -10,6 +10,15 @@ import datetime
 
 
 
+x = tuple((1, 2))
+print(x)
+x = list(x)
+print(x)
+
+def test():
+    return 1, 2, 3
+*_, x = test()
+print(x)
 
 x = np.array([1,2,2,3,3,4])
 print(np.where(x[:-1] == x[1:]))

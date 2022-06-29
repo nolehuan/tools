@@ -5,6 +5,16 @@ import torch.nn.functional as F
 import time
 
 
+
+
+_TORCH_VER = [int(x) for x in torch.__version__.split(".")[:2]]
+x = torch.Tensor([[2, 3], [1, 2]])
+if _TORCH_VER >= [1, 10]:
+    x =  torch.meshgrid(*x, indexing="ij")
+else:
+    x = torch.meshgrid(*x)
+print(x)
+
 bn = nn.BatchNorm2d(num_features=10, affine=True)
 
 x = torch.ones(2, 3)
