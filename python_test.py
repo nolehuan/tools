@@ -10,6 +10,14 @@ import datetime
 
 
 
+
+
+
+
+x = np.array([[2, 4, 5, 1], [3, 4, 9, 0]])
+print(x.shape)
+print(x.argmax(1))
+
 x = tuple((1, 2))
 print(x)
 x = list(x)

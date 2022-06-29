@@ -7,6 +7,20 @@ import time
 
 
 
+x = torch.rand([1, 3, 64, 64])
+dconv = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=3, stride=1,
+                    padding=1, dilation=2, groups=1, bias=True, padding_mode="zeros")
+print(dconv.weight.data.shape)
+y = dconv(x)
+print(y.shape)
+x = torch.rand([1, 3, 2, 2])
+tconv = nn.ConvTranspose2d(in_channels=3, out_channels=6, kernel_size=3,
+                            stride=1, padding=0, output_padding=0, groups=1,
+                            bias=True, dilation=1, padding_mode="zeros")
+y = tconv(x)
+print(y.shape)
+
+
 _TORCH_VER = [int(x) for x in torch.__version__.split(".")[:2]]
 x = torch.Tensor([[2, 3], [1, 2]])
 if _TORCH_VER >= [1, 10]:
