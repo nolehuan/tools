@@ -40,3 +40,39 @@ class Conv(object):
                 out[i, j] = np.sum(fea_win * kernel)
         return out
 
+if __name__=='__main__':
+    inputs = np.array([[
+        [
+            [1, 0, 1, 2, 1],
+            [0, 2, 1, 0, 1],
+            [1, 1, 0, 2, 0],
+            [2, 2, 1, 1, 0],
+            [2, 0, 1, 2, 0],
+        ],
+        [
+            [2, 0, 2, 1, 1],
+            [0, 1, 0, 0, 2],
+            [1, 0, 0, 2, 1],
+            [1, 1, 2, 1, 0],
+            [1, 0, 1, 1, 1],
+
+        ],
+    ]])
+    print(inputs.shape)
+    weights = np.array([[
+        [
+            [1, 0, 1],
+            [-1, 1, 0],
+            [0, -1, 0],
+        ],
+        [
+            [-1, 0, 1],
+            [0, 0, 1],
+            [1, 1, 1],
+        ]
+    ]])
+    print(weights.shape)
+    conv = Conv(inputs, weights)
+    out = conv.conv2d()
+    print(out)
+    print(out.shape)
