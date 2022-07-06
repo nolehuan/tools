@@ -6,6 +6,21 @@ import time
 
 
 
+x = torch.rand([1,2,2])
+y = x.new(x.shape)
+print(x)
+print(y)
+
+x = torch.rand([1,2,3,3])
+print(x)
+print(1/(1+torch.exp(-x[0,0,1,1])))
+x = x.sigmoid()
+print(x)
+
+x = torch.LongTensor([[1,2,3,4],[5,6,7,8]])
+embedding = nn.Embedding(9, 6, padding_idx=6)
+x = embedding(x)
+print(x)
 
 x = torch.rand([1, 3, 64, 64])
 dconv = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=3, stride=1,
@@ -19,7 +34,6 @@ tconv = nn.ConvTranspose2d(in_channels=3, out_channels=6, kernel_size=3,
                             bias=True, dilation=1, padding_mode="zeros")
 y = tconv(x)
 print(y.shape)
-
 
 _TORCH_VER = [int(x) for x in torch.__version__.split(".")[:2]]
 x = torch.Tensor([[2, 3], [1, 2]])
