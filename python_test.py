@@ -9,6 +9,18 @@ import itertools
 import datetime
 import scipy.special
 
+
+
+# noi
+class Truth:
+    pass
+a = Truth()
+print(bool(a))
+
+b = (1, [2, 4])
+b[1].extend([6, 8])
+print(b)
+
 idx = np.arange(3) + 1
 print(idx)
 
