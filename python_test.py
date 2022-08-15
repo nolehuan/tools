@@ -1,5 +1,6 @@
 import os
 import random
+from collections import Counter
 import uuid
 import numpy as np
 import cv2
@@ -8,8 +9,64 @@ import io
 import itertools
 import datetime
 import scipy.special
+import re
 
+s = "ajldjlajfdljfddd"
+ret = Counter(s)
+print(ret)
 
+d = {"name":"lh", "age":24, "city":"rz"}
+l = sorted(d.items(), key=lambda kv : kv[0], reverse=False)
+print(l)
+
+s = "ajldjlajfdljfddd"
+s = set(s)
+s = list(s)
+s.sort(reverse=False)
+s = "".join(s)
+print(s)
+
+a = 1
+b = 1
+print(id(a))
+print(id(b))
+
+s = '<div class="name">china</div>'
+ret = re.findall(r'<div class=".*">(.*?)</div>', s)
+print(ret)
+
+x = random.randint(0, 3) # 随机整数
+y = np.random.randn(5) # 随机小数
+z = random.random() # 0-1 小数
+print(x)
+print(y)
+print(z)
+
+l = [1, 2, 3]
+def func(x):
+    return x**2
+ml = map(func, l)
+print(list(ml))
+
+class bike(object):
+    def __init__(self, color, wheel) -> None:
+        print("init")
+        print(color)
+        print(wheel)
+        self.color = color
+        self.wheel = wheel
+    def __new__(cls, color, wheel):
+        print("new")
+        return super().__new__(cls)
+bike("red", 4)
+
+def func(*args, **kwargs):
+    for key in args:
+        print(key)
+    for key, value in kwargs.items():
+        print(key, value)
+
+func('a', 'b', 'c', name="banban", age=24)
 
 # noi
 class Truth:
