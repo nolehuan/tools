@@ -11,6 +11,61 @@ import datetime
 import scipy.special
 import re
 
+x = "abc"
+y = "def"
+z = ["g", "h", "i"]
+print(x.join(z))
+print(x.join(y))
+
+s = "<a>lh</a><a>lh</a>"
+r = re.findall('<a>(.*)</a>', s)
+print(r) # 贪婪匹配，尽可能多匹配
+r = re.findall('<a>(.*?)</a>', s)
+print(r) # 非贪婪匹配
+
+s = "正则 404 not found -1.2 3.4"
+l = s.split(" ")
+r = re.findall('-*\d+\.?\d*|[a-zA-Z]+', s)
+# \d+ 匹配数字 | 连接多个匹配方式 [a-zA-Z] 匹配单词
+# -*\d+\.?\d* 匹配小数
+for i in r:
+    if i in l:
+        l.remove(i)
+s = " ".join(l)
+print(s)
+
+s = '<div class="name">china</div>'
+ret = re.findall(r'<div class=".*">(.*?)</div>', s)
+print(ret)
+
+l = [[1,2],[8,9]]
+ll = np.array(l).flatten().tolist()
+print(ll)
+
+try:
+    a = 0
+    raise Exception(a)
+except Exception as e:
+    print(e)
+finally:
+    print("over")
+
+s = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+d = datetime.datetime.now().isoweekday()
+print(s, d)
+
+a = 0
+b = 1
+a, b = b, a
+print(a, b)
+
+l = [1,2,3,4,5]
+def func(x):
+    return x % 2
+ll = filter(func, l)
+l = [x for x in ll]
+print(l)
+
 s = "ajldjlajfdljfddd"
 ret = Counter(s)
 print(ret)
@@ -30,10 +85,6 @@ a = 1
 b = 1
 print(id(a))
 print(id(b))
-
-s = '<div class="name">china</div>'
-ret = re.findall(r'<div class=".*">(.*?)</div>', s)
-print(ret)
 
 x = random.randint(0, 3) # 随机整数
 y = np.random.randn(5) # 随机小数
