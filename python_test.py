@@ -11,6 +11,9 @@ import datetime
 import scipy.special
 import re
 
+for i in range(1, 5, 1):
+    print(i)
+
 x = "abc"
 y = "def"
 z = ["g", "h", "i"]
