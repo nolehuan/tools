@@ -10,6 +10,64 @@ import itertools
 import datetime
 import scipy.special
 import re
+import copy
+
+
+
+
+# a = [1, 2]
+# a = [1, 2, [3, 4]]
+a = [1, 2, {"a": 1}]
+b = a
+c = copy.copy(a)
+d = copy.deepcopy(a)
+a[0] = 2
+print(a, id(a))
+print(b, id(b))
+print(c, id(c))
+print(d, id(d))
+
+a = "copy"
+b = a
+c = copy.copy(a)
+d = copy.deepcopy(a)
+print(id(a))
+print(id(b))
+print(id(c))
+print(id(d))
+
+a = [0, "a", 1, [], False, None]
+print([bool(i) for i in a])
+print(any(a))
+print(all(a))
+
+dict = {"one": 1, "two": 2}
+# del dict["one"]
+dict.pop("one")
+print(dict)
+
+def func(k, v, dict = {}):
+    dict[k] = v
+    print(dict)
+func("one", 1)
+func("two", 2)
+func("three", 3, {})
+
+a = "%.03f" % 1.3335
+print(a, type(a))
+b = round(float(a), 2)
+print(b)
+
+a = b"hello"
+b = "world".encode()
+print(a, type(a))
+print(b, type(b))
+
+a = [1, 3, 5]
+b = "asdf"
+c = (a, b, a)
+r = [i for i in zip(a, b, c)]
+print(r)
 
 for i in range(1, 5, 1):
     print(i)
@@ -19,6 +77,10 @@ y = "def"
 z = ["g", "h", "i"]
 print(x.join(z))
 print(x.join(y))
+
+s = "nnn 88mmm"
+r = re.sub(r"\d+", "100", s)
+print(r)
 
 s = "<a>lh</a><a>lh</a>"
 r = re.findall('<a>(.*)</a>', s)
