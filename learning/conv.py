@@ -4,7 +4,7 @@ class Conv(object):
     def __init__(self, inputs, weights, stride=1, padding=1) -> None:
         '''
         inputs: b * c_in * h * w
-        weights: c_in * k * k * c_out
+        weights: c_out * c_in * k * k
         '''
         self.inputs = np.asarray(inputs, np.float32)
         self.weights = np.asarray(weights, np.float32)

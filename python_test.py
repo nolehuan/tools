@@ -15,6 +15,10 @@ import copy
 
 
 
+# s = "abc"d"
+s = "abc'd"
+s = 'abc"d'
+
 # a = [1, 2]
 # a = [1, 2, [3, 4]]
 a = [1, 2, {"a": 1}]
