@@ -4,7 +4,14 @@ import numpy as np
 import torch.nn.functional as F
 import time
 
-
+bn = nn.BatchNorm2d(num_features=4, affine=True)
+x = torch.rand([2, 4, 8, 8])
+y = bn(x)
+print(bn.weight)
+print(bn.weight.shape)
+print(bn.bias.shape)
+print(x.shape)
+print(y.shape)
 
 x = torch.rand([1,2,2])
 y = x.new(x.shape)
@@ -42,8 +49,6 @@ if _TORCH_VER >= [1, 10]:
 else:
     x = torch.meshgrid(*x)
 print(x)
-
-bn = nn.BatchNorm2d(num_features=10, affine=True)
 
 x = torch.ones(2, 3)
 y = torch.zeros(2, 3)
