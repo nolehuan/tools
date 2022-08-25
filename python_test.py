@@ -11,9 +11,99 @@ import datetime
 import scipy.special
 import re
 import copy
+import json
 
 
 
+
+s = "--中文--匹配--"
+p = re.compile(r'[\u4e00-\u9fa5]+')
+r = p.findall(s)
+print(r)
+
+s = "xiaoming 18 year 1 month"
+r = re.search(r"\d+", s).group()
+print(r)
+r = re.findall(r"\d+", s)
+print(r)
+r = re.match("xi", s).group()
+print(r)
+
+a = [1, 2, 3]
+b = [3, 4, 5]
+i = list(set(a).intersection(set(b)))
+u = list(set(a).union(set(b)))
+d = list(set(a).difference(set(b)))
+print(i, u, d)
+
+r1 = 100 * random.random()
+r2 = random.choice(range(0, 101))
+r3 = random.randint(1, 100)
+print(r1, r2, r3)
+
+l = ["a", "", "", "b"]
+r = list(map(lambda x:"c" if x == "" else x, l))
+print(r)
+
+class A(object):
+    def __str__(self) -> str:
+        return "A object"
+    def __del__(self) -> None:
+        print("del...")
+a = A()
+print(a)
+del a
+
+s = "s d ls l"
+s = s.replace(" ", "")
+print(s)
+
+s = "Lh"
+print(s.lower())
+print(s.upper())
+
+s = "info: xiaoZhang 33 shandong"
+print(s.count("h"))
+
+d = {"a": 1}
+r = json.dumps(d)
+print(type(r))
+print(type(d))
+r = json.loads(r)
+print(type(r))
+
+el = ["lhlh@163.com", "lyqlh@163.compute", "flalh@qq.com"]
+for e in el:
+    r = re.match("[\w]{4,12}@163.com$", e)
+    if r:
+        print(e)
+
+s = "info: xiaoZhang 33 shandong"
+r = re.split(r":| ", s)
+print(r)
+
+d = [["a",1], ["b", 2], ["c", 1]]
+r = sorted(d, key=lambda x : (x[1], x[0]))
+print(r)
+
+l = [-2, 2, -3, 1, 3]
+r = sorted(l, key=lambda x : -x)
+print(r)
+
+l = [-2, 2, -3, 1, 3]
+r = sorted(l, reverse=False)
+print(r)
+print(l)
+l.sort(reverse=False)
+print(l)
+
+s = " abc   "
+s = s.strip()
+print(s)
+print(len(s))
+
+a = (i for i in range(3))
+print(type(a))
 
 # s = "abc"d"
 s = "abc'd"
