@@ -15,6 +15,18 @@ import json
 
 
 
+a = 10
+def func():
+    global a
+    a -= 5
+print(a)
+
+def func(e, l = []):
+    l.append(e)
+    return l
+print(func(1))
+print(func(2, []))
+print(func(3))
 
 s = "--中文--匹配--"
 p = re.compile(r'[\u4e00-\u9fa5]+')
