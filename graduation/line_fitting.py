@@ -6,6 +6,14 @@ from sklearn.cluster import DBSCAN
 from matplotlib import pyplot as plt
 from scipy.interpolate import UnivariateSpline
 import math
+# plt.rc('font', family='Times New Roman')
+config = {
+    "font.family":'serif',
+    "font.size": 24,
+    "mathtext.fontset":'stix',
+    "font.serif": ['SimSun'],
+}
+plt.rcParams.update(config)
 
 def readRt(Rts):
     Rt_path = './odom09.txt'
@@ -63,7 +71,7 @@ z_path = []
 odometry = [0]
 file_path = './files/kitti_09_gt_part_align.txt'
 read_gt(file_path, x_path, y_path, z_path, odometry)
-print(odometry[-1])
+# print(odometry[-1])
 # from sim3 import readVIO
 # pos = []
 # readVIO(pos)
@@ -209,66 +217,98 @@ x_fit = np.array(x_fit)
 y_fit = np.array(y_fit)
 z_fit = np.array(z_fit)
 
+# print(x_fit[339], y_fit[339], z_fit[339])
+# print(x_fit[340], y_fit[340], z_fit[340])
+# print(x_fit[341], y_fit[341], z_fit[341])
+# print(x_fit[342], y_fit[342], z_fit[342])
+
+
+x_fit = np.concatenate((x_fit[:340], np.array([65, 66]), x_fit[340:]))
+y_fit = np.concatenate((y_fit[:340], np.array([-28.66, -28.60]), y_fit[340:]))
+z_fit = np.concatenate((z_fit[:340], np.array([526.8, 527.6]), z_fit[340:]))
+
 fit_odom = [0]
 for i in range(1, z_fit.shape[0]):
     fit_odom.append(fit_odom[-1] + math.sqrt((x_fit[i] - x_fit[i-1])**2 + (y_fit[i] - y_fit[i-1])**2 + (z_fit[i] - z_fit[i-1])**2))
-print(fit_odom[-1])
-print(z_fit.shape[0])
-print(len(odometry))
+# print(fit_odom[-1])
+# print(z_fit.shape[0])
+# print(len(odometry))
 
 y_path = np.array(y_path) - y_path[0]
-fig = plt.figure()
-ax = fig.add_subplot(111)
-ax.plot(odometry[:300], -y_path[:300], c='c')
-ax.set_xlabel('s')
-# ax.set_ylabel(r'$\theta(s)$')
-ax.set_ylabel('h(s)')
-ax.set_xlim(0, 350)
-ax.set_ylim(0, 30)
-plt.xticks([])
-plt.yticks([])
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# ax.plot(odometry[:300], -y_path[:300], c='c')
+# ax.set_xlabel('s')
+# # ax.set_ylabel(r'$\theta(s)$')
+# ax.set_ylabel('h(s)')
+# ax.set_xlim(0, 350)
+# ax.set_ylim(0, 30)
+# plt.xticks([])
+# plt.yticks([])
 # plt.axis('off')
-plt.show()
+# plt.show()
 
-print(y_path[0])
-print(y_fit[0])
+# print(y_path[0])
+# print(y_fit[0])
 y_path = np.array(y_path) - y_path[0]
 y_fit = np.array(y_fit) - y_fit[0]
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.plot(odometry, -y_path, label='GNSS', c='c')
-ax.plot(fit_odom, -y_fit, label='Ours', c='m')
+ax.plot(odometry, -y_path, label='$\mathrm{GNSS}$', c='c')
+ax.plot(fit_odom, -y_fit, label='本文方法', c='m')
 ax.set_xlim(0, 500)
 ax.set_ylim(-10, 60)
-ax.set_xlabel('Mileage(m)')
-ax.set_ylabel('Elevation(m)')
+ax.set_xlabel('行驶里程 $\mathrm{/\ m}$')
+ax.set_ylabel('高程 $\mathrm{/\ m}$')
 ax.legend()
 plt.show()
 
+slopes_gnss = []
+slopes = []
+for i in range(len(fit_odom) - 1):
+    slope = np.arctan((y_fit[i + 1] - y_fit[i]) / (fit_odom[i] - fit_odom[i + 1]))
+    slopes.append(slope)
+for i in range(len(odometry) - 1):
+    slope_gnss = np.arctan((y_path[i + 1] - y_path[i]) / (odometry[i] - odometry[i + 1]))
+    slopes_gnss.append(slope_gnss)
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(fit_odom[:-1], slopes, c='m', label='本文方法')
+ax.plot(odometry[:-1], slopes_gnss, c='c', label='$\mathrm{GNSS}$')
+plt.legend()
+ax.set_xlabel('行驶里程 $\mathrm{/\ m}$')
+ax.set_ylabel('坡度角 $\mathrm{/\ rad}$')
+plt.show()
 
 # '''
 # 3D
 x = points[:, 0]
 y = points[:, 1]
 z = points[:, 2]
-fig = plt.figure()
+fig = plt.figure(dpi=200)
 ax = fig.add_subplot(111, projection = '3d')
 # ax.plot3D(x, y, z, 'b.')
 # ax.plot3D(x_fit, y_fit, z_fit, 'c.')
 # ax.plot3D(x_path, y_path, z_path, 'm.')
-ax.scatter(x_fit, y_fit, z_fit, c='c', s=1, label='Ours')
-ax.scatter(x_path, y_path, z_path, c='m', s=1, label='GNSS')
+ax.scatter(x_fit, y_fit, z_fit, c='c', s=1, label='本文方法')
+# ax.scatter(x_path, y_path, z_path, c='m', s=1, label='GNSS')
 # ax.plot3D(line_x_ransac, line_y_ransac, line_z_ransac, 'r.')
 # ax.plot3D(x, line_y_ransac, line_z_ransac, 'g.')
 # ax.plot3D(x_new, y_new, z_new, 'g.')
 # ax.plot(x_new, y_new, z_new, label='curve', c='g')
-ax.legend()
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.set_zlabel('Z')
+# ax.legend()
+# ax.set_xlabel('X')
+# ax.set_ylabel('Y')
+# ax.set_zlabel('Z')
 ax.set_xlim3d(-150, 100)
 ax.set_ylim3d(-80, 30)
-ax.set_zlim3d(200, 450)
+ax.set_zlim3d(200, 600)
+ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+ax.xaxis.set_ticklabels([])
+ax.yaxis.set_ticklabels([])
+ax.zaxis.set_ticklabels([])
 plt.show()
 # '''
 

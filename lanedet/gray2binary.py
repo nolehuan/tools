@@ -30,9 +30,9 @@ cv2.waitKey(0)
 # img = cv2.imread(r"D:/Users/nole/Desktop/dataset/culane/laneseg_label_w16/driver_182_30frame/05312327_0001.MP4/00000.png")
 # img = cv2.imread(r"D:/Users/nole/Desktop/dataset/culane/laneseg_label_w16/driver_161_90frame/06031752_0900.MP4/00000.png")
 # img = cv2.imread(r"D:/Users/nole/Desktop/FCLane/laneseg_label/group1/010000.png", 0)
-img = cv2.imread(r"D:/Users/buaa/Desktop/FCLane/laneseg_label/culane_style/group2/020000.png", 0)
+# img = cv2.imread(r"D:/Users/buaa/Desktop/FCLane/laneseg_label/culane_style/group2/020000.png", 0)
 # img = cv2.imread(r"D:/Users/nole/Desktop/FCLane/laneseg_label/group0/001299.png", 0)
-
+img = cv2.imread(r"D:/Users/buaa/Desktop/LoFTR/assets/odometry/09/label/000068.png", 0)
 
 # _, maxVal, _, maxLoc = cv2.minMaxLoc(img)
 # print(maxVal)
@@ -50,7 +50,7 @@ img = cv2.imread(r"D:/Users/buaa/Desktop/FCLane/laneseg_label/culane_style/group
 # img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 # retval, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY|cv2.THRESH_OTSU) # 像素值为1的点变为0
 retval, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY)
-img = cv2.resize(img, (960, 640), interpolation=cv2.INTER_LINEAR)
+# img = cv2.resize(img, (960, 640), interpolation=cv2.INTER_LINEAR)
 
 # img = img[120:None]
 
@@ -59,3 +59,4 @@ img = cv2.resize(img, (960, 640), interpolation=cv2.INTER_LINEAR)
 cv2.imshow("img", img)
 cv2.waitKey(0)
 # cv2.imwrite("D:/Users/*/Desktop/*.jpg",img)
+cv2.imwrite("../68.png",img)

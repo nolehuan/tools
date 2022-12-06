@@ -4,6 +4,7 @@ import numpy as np
 from sympy import N
 from centroid import read_pts
 from sim3 import read_gt
+plt.rc('font', family='Times New Roman')
 
 if __name__ == "__main__":
     points = []
@@ -46,12 +47,19 @@ if __name__ == "__main__":
     ax.scatter(align_points[:, 0], align_points[:, 1], align_points[:, 2], c='c', s=1, label='Ours')
     ax.scatter(x_path, y_path, z_path, c='m', s=1, label='GNSS')
     ax.legend()
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
+    # ax.set_xlabel('X')
+    # ax.set_ylabel('Y')
+    # ax.set_zlabel('Z')
     ax.set_xlim3d(-150, 130)
     ax.set_ylim3d(-80, 30)
     ax.set_zlim3d(200, 450)
+    ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    # ax.axes.xaxis.set_visible(False)
+    # ax.axes.yaxis.set_visible(False)
+    # ax.axes.zaxis.set_visible(False)
+    # plt.axis('off')
     plt.show()
 
     '''

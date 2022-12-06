@@ -15,6 +15,22 @@ if __name__ == "__main__":
     path = './files/lane1_filtered3.txt'
     read_pts(points, path)
     points = np.array(points).astype('float64')
+
+    fig = plt.figure(dpi=300) # 
+    ax = fig.add_subplot(111, projection = '3d')
+    ax.scatter(points[:,0], points[:,1], points[:,2], marker=".", c='c', s=1.5, linewidths=0)
+    ax.set_xlim3d(-150, 100)
+    ax.set_ylim3d(-80, 30)
+    ax.set_zlim3d(200, 600)
+    ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+    # plt.savefig('../pts.png', dpi=600, bbox_inches='tight')
+    ax.xaxis.set_ticklabels([])
+    ax.yaxis.set_ticklabels([])
+    ax.zaxis.set_ticklabels([])
+    plt.show()
+
     indice = points[:, 2].argsort()
     points = points[indice] # sort by z
 
